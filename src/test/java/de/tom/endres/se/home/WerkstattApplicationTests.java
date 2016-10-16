@@ -1,4 +1,4 @@
-package de.tom.endres.se.ha;
+package de.tom.endres.se.home;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -1,21 +1,23 @@
-package de.tom.endres.se.ha;
+package de.tom.endres.se.home;
 
 import net.aksingh.owmjapis.CurrentWeather;
 import net.aksingh.owmjapis.DailyForecast;
 import net.aksingh.owmjapis.OpenWeatherMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 public class WerkstattApplication {
 
 	private static final Logger log = LoggerFactory.getLogger(WerkstattApplication.class);
+
+	@Value("${weather.apikey}")
+	String apikey;
 
 	public static void main(String[] args) {
 		SpringApplication.run(WerkstattApplication.class, args);
@@ -25,7 +27,7 @@ public class WerkstattApplication {
 	public CommandLineRunner doSomething() {
 		return (args) -> {
 			// declaring object of "OpenWeatherMap" class
-			OpenWeatherMap owm = new OpenWeatherMap(OpenWeatherMap.Units.METRIC, OpenWeatherMap.Language.GERMAN,"<apikey>");
+			OpenWeatherMap owm = new OpenWeatherMap(OpenWeatherMap.Units.METRIC, OpenWeatherMap.Language.GERMAN,apikey);
 
 			// getting current weather data for the "London" city
 			CurrentWeather cwd = owm.currentWeatherByCityName("Melchow");
