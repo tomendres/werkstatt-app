@@ -15,6 +15,7 @@ public class Daemon implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Lob
+	@Id
 	private String info;
 
 	@Lob

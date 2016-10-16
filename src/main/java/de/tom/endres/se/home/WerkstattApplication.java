@@ -1,10 +1,13 @@
 package de.tom.endres.se.home;
 
+import de.tom.endres.se.home.domain.Outbox;
+import de.tom.endres.se.home.repository.OutboxRepository;
 import net.aksingh.owmjapis.CurrentWeather;
 import net.aksingh.owmjapis.DailyForecast;
 import net.aksingh.owmjapis.OpenWeatherMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -18,6 +21,9 @@ public class WerkstattApplication {
 
 	@Value("${weather.apikey}")
 	String apikey;
+
+	@Autowired
+	OutboxRepository outboxRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(WerkstattApplication.class, args);
@@ -54,6 +60,12 @@ public class WerkstattApplication {
 					log.info("Rain: " + dfc.getForecastInstance(0).getRain());
 				}
 			}
+
+			Outbox outbox = new Outbox();
+			outbox.setDestinationNumber("+491739939271");
+			outbox.setTextDecoded("test4");
+			outboxRepository.saveAndFlush(outbox);
+			log.info("done");
 		};
 	}
 }

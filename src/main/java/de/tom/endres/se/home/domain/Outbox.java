@@ -4,6 +4,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.Date;
 
 
 /**
@@ -11,43 +12,63 @@ import java.sql.Timestamp;
  * 
  */
 @Entity
-@NamedQuery(name="Outbox.findAll", query="SELECT o FROM Outbox o")
+@Table(name = "outbox")
 public class Outbox implements Serializable {
+
+	public enum DeliveryReport { DEFAULT, YES, NO}
+
+	public enum Coding { Default_No_Compression, Unicode_No_Compression, eight_bit, Default_Compression, Unicode_Compression }
+
+	public enum Multipart {TRUE, FALSE}
+
+	private static Timestamp getCurrentTime() {
+		Date date = new Date();
+		return new Timestamp(date.getTime());
+	}
+
+
 	private static final long serialVersionUID = 1L;
+
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int id;
 
 	@Column(name="Class")
-	private int class_;
+	private int class_ = -1;
 
-	private String coding;
+	@Enumerated(EnumType.STRING)
+	@Column(columnDefinition = "ENUM('Default_No_Compression', 'Unicode_No_Compression', '8bit', 'Default_Compression', 'Unicode_Compression') DEFAULT 'Default_No_Compression'")
+	private Coding coding = Coding.Default_No_Compression;
 
 	@Lob
-	private String creatorID;
+	private String creatorID = "Werkstatt App";
 
-	private String deliveryReport;
+	@Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "ENUM('default', 'yes', 'no') DEFAULT 'default'")
+	private DeliveryReport deliveryReport = DeliveryReport.DEFAULT;
 
 	private String destinationNumber;
 
 	private Timestamp insertIntoDB;
 
-	private String multiPart;
+	@Enumerated(EnumType.STRING)
+	@Column(columnDefinition = "NUM('false', 'true') DEFAULT 'false'")
+	private Multipart multiPart = Multipart.FALSE;
 
-	private int relativeValidity;
+	private int relativeValidity = -1;
 
 	private int retries;
 
-	private Time sendAfter;
+	private Time sendAfter = new Time(0,0,0);
 
-	private Time sendBefore;
+	private Time sendBefore = new Time(23,59,59);
 
 	private String senderID;
 
 	private Timestamp sendingDateTime;
 
-	private Timestamp sendingTimeOut;
+	private Timestamp sendingTimeOut = getCurrentTime();
 
 	@Lob
 	private String text;
@@ -79,11 +100,11 @@ public class Outbox implements Serializable {
 		this.class_ = class_;
 	}
 
-	public String getCoding() {
+	public Coding getCoding() {
 		return this.coding;
 	}
 
-	public void setCoding(String coding) {
+	public void setCoding(Coding coding) {
 		this.coding = coding;
 	}
 
@@ -95,11 +116,11 @@ public class Outbox implements Serializable {
 		this.creatorID = creatorID;
 	}
 
-	public String getDeliveryReport() {
+	public DeliveryReport getDeliveryReport() {
 		return this.deliveryReport;
 	}
 
-	public void setDeliveryReport(String deliveryReport) {
+	public void setDeliveryReport(DeliveryReport deliveryReport) {
 		this.deliveryReport = deliveryReport;
 	}
 
@@ -119,11 +140,11 @@ public class Outbox implements Serializable {
 		this.insertIntoDB = insertIntoDB;
 	}
 
-	public String getMultiPart() {
+	public Multipart getMultiPart() {
 		return this.multiPart;
 	}
 
-	public void setMultiPart(String multiPart) {
+	public void setMultiPart(Multipart multiPart) {
 		this.multiPart = multiPart;
 	}
 
